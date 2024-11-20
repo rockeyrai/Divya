@@ -1,9 +1,14 @@
-"use client"
+"use client";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
+  const router = useRouter();
   // Validation schema
   const validationSchema = Yup.object({
     fullName: Yup.string()
@@ -29,9 +34,18 @@ const RegisterForm = () => {
   };
 
   // Form submission
-  const onSubmit = (values) => {
-    console.log("Form data", values);
+  const onSubmit = async (values, { resetForm }) => {
+    try {
+      const { data } = await axios.post("http://localhost:8000/register", values);
+      if (data) {
+        toast.success(data.msg || "Registration successful!");
+        resetForm(); // Reset the form values
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.msg || "Something went wrong!");
+    }
   };
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -103,7 +117,14 @@ const RegisterForm = () => {
             </button>
           </Form>
         </Formik>
+        <div className="flex gap-3">
+          <h1>Singin to your account</h1>
+          <button type="button" onClick={() => router.push("/login")}>
+            login
+          </button>
+        </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
