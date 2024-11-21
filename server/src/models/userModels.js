@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   email: {type:String, unique:true}, 
-  phoneNumber: Number,
+  phoneNumber: {type:Number , unique:true},
   password: String,
   // level: {
   //   type: String,
