@@ -37,7 +37,7 @@ const RaiHome = () => {
       <div ref={serviceRef} className="section-height">
         <RaiService />
       </div>
-      <div ref={footerRef} className="section-height">
+      <div ref={footerRef} className="h-[50vh] pt-[10vh]">
         <RaiFooter />
       </div>
     </div>
