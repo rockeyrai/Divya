@@ -102,13 +102,13 @@ const RaiNews = forwardRef((props, ref) => {
           )}
           <div
             ref={sliderRef}
-            className="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory"
+            className="flex overflow-x-auto gap-5 pb-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {newsItems.map((item) => (
               <div
                 key={item.id}
-                className="flex-shrink-0 w-[300px] h-[400px] snap-center bg-white rounded-lg shadow-md overflow-hidden"
+                className="flex-shrink-0 w-[300px] h-[400px] snap-center bg-white rounded-lg shadow-md overflow-hidden hover-box "
               >
                 <Image
                   src={item.image}
