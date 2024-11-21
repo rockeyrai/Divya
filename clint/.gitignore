@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/pulbic
 /.pnp
 .pnp.*
 .yarn/*
@@ -31,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+
 
 # vercel
 .vercel
