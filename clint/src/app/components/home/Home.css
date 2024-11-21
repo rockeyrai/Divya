@@ -1,0 +1,4 @@
+.section-height {
+  height: calc(100vh - 10vh); /* Reduce the height to fit below the navbar */
+  padding-top: 10vh; /* Adds padding to create space for the fixed navbar */
+}

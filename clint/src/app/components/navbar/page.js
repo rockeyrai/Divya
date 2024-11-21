@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Navbar.css";
+import { useRouter } from "next/navigation";
 
-const RaiNavbar = ({scrollToSection }) => {
+const RaiNavbar = ({ scrollToSection }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const router = useRouter(); // Initialize useNavigate
   useEffect(() => {
+    
     const fetchUserData = async () => {
       try {
         // Retrieve the token and user from localStorage
@@ -46,13 +48,14 @@ const RaiNavbar = ({scrollToSection }) => {
 
   return (
     <nav className="navbar">
-      <h1>Divya</h1>
+      <h1 onClick={() => router.push('/')} className="cursor-pointer">Divya</h1>
       <div className="flex items-center w-[50%] justify-between">
-      <ul className="flex items-center">
-      <li onClick={() => scrollToSection('hero')}>Hero</li>
-      <li onClick={() => scrollToSection('news')}>News</li>
-      <li onClick={() => scrollToSection('footer')}>Footer</li>
-    </ul>
+        <ul className="flex items-center gap-3 cursor-pointer">
+          <li onClick={() => scrollToSection("hero")}>Home</li>
+          <li onClick={() => scrollToSection("news")}>News</li>
+          <li onClick={() => scrollToSection("service")}>Service</li>
+          <li onClick={() => scrollToSection("footer")}>Contact</li>
+        </ul>
         <h2>Welcome, {userData.fullName}</h2>
       </div>
     </nav>
