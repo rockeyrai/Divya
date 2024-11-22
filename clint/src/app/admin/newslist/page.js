@@ -28,12 +28,17 @@ const NewsList = () => {
 
   return (
     <div>
+      <div className="flex justify-between">
+      <h1>All News Articles</h1>
       <div>
         <PlusCircle className="cursor-pointer w-8 h-8" onClick={addPopUp} />
         {add && <NewsForm />}
       </div>
+
+      </div>
+
       <div className="news-list">
-        <h1>All News Articles</h1>
+
         <div className="newslist-header">
           <p>Image</p>
           <p>Title</p>
