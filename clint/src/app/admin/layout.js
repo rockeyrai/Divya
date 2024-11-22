@@ -7,11 +7,12 @@ import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { Sheet, SheetContent } from "@/app/components/ui/sheet";
 import { cn } from "@/lib/utils"
-import { Bell, ChevronDown, Home, LayoutDashboard, Menu, Settings, Users } from 'lucide-react'
+import { Bell, ChevronDown, Home, LayoutDashboard, Menu, Newspaper, Settings, Users } from 'lucide-react'
 
 const sidebarItems = [
   { icon: Home, label: 'Home', href: '/admin' },
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
+  { icon: Newspaper,label:'News List', href:'/admin/newslist'},
   { icon: Users, label: 'Users', href: '/admin/users' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },
 ]
