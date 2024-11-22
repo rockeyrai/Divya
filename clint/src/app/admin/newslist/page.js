@@ -2,6 +2,7 @@
 import NewsForm from "@/app/components/newsform";
 import { PlusCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import './Newslist.css'
 
 const NewsList = () => {
   const [allNews, setAllNews] = useState([]);
@@ -39,7 +40,7 @@ const NewsList = () => {
 
       <div className="news-list">
 
-        <div className="newslist-header">
+        <div className="listproduct-format-main">
           <p>Image</p>
           <p>Title</p>
           <p>Source</p>
@@ -51,7 +52,7 @@ const NewsList = () => {
           <hr />
           {allNews.map((news) => (
             <div key={news.id || news._id || news.title}>
-              <div className="newslist-item">
+              <div className=" listproduct-format-main listproduct-format ">
                 <img
                   src={news.image || "default_image.png"} // Fallback for missing image
                   alt="News"
@@ -74,8 +75,8 @@ const NewsList = () => {
                 {/* Fallback for missing description */}
                 <img
                   onClick={() => removeNews(news.id)}
-                  className="newslist-remove-icon"
-                  src="cross_icon.png"
+                  className="remove-icon"
+                  src="/delete_.png"
                   alt="remove"
                 />
               </div>

@@ -18,7 +18,72 @@ const newsValidationSchema = Yup.object({
     .required("Date is required")
     .max(new Date(), "Date cannot be in the future"),
   image: Yup.mixed().required("News image is required"),
+  tags: Yup.array().min(1, "At least one tag is required"),
 });
+
+const TagsInput = ({ values, setFieldValue }) => {
+  const [tag, setTag] = useState("");
+
+  const addTag = (e) => {
+    e.preventDefault();
+    if (tag.trim() && !values.tags.includes(tag)) {
+      setFieldValue("tags", [...values.tags, tag]);
+      setTag("");
+    }
+  };
+
+  const removeTag = (index) => {
+    const newTags = values.tags.filter((_, i) => i !== index);
+    setFieldValue("tags", newTags);
+  };
+
+  return (
+    <div>
+      <label htmlFor="tags" className="block font-medium">
+        Tags
+      </label>
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="text"
+          id="tags"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+          placeholder="Add a tag"
+          className="border p-2 rounded flex-1"
+        />
+        <button
+          type="button"
+          onClick={addTag}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {values.tags.map((t, index) => (
+          <div
+            key={index}
+            className="bg-gray-200 px-3 py-1 rounded flex items-center gap-1"
+          >
+            <span>{t}</span>
+            <button
+              type="button"
+              onClick={() => removeTag(index)}
+              className="text-red-500 font-bold"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+      <ErrorMessage
+        name="tags"
+        component="div"
+        className="text-red-600 text-sm"
+      />
+    </div>
+  );
+};
 
 const NewsForm = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -29,6 +94,7 @@ const NewsForm = () => {
     source: "",
     date: "",
     image: null,
+    tags: [],
   };
 
   const handleImagePreview = (file) => {
@@ -38,12 +104,10 @@ const NewsForm = () => {
   const handleSubmit = async (values, { resetForm }) => {
     let uploadedImageUrl;
 
-    // Create FormData for image upload
     const formData = new FormData();
     formData.append("product", values.image);
 
     try {
-      // Upload the image
       const imageResponse = await fetch("http://localhost:8000/upload", {
         method: "POST",
         headers: {
@@ -60,13 +124,11 @@ const NewsForm = () => {
         return;
       }
 
-      // Prepare the news data
       const newsData = {
         ...values,
-        image: uploadedImageUrl, // Use the uploaded image URL
+        image: uploadedImageUrl,
       };
 
-      // Submit the news data
       const newsResponse = await axios.post(
         "http://localhost:8000/addnews",
         newsData
@@ -92,8 +154,8 @@ const NewsForm = () => {
       validationSchema={newsValidationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue }) => (
-        <Form className="space-y-4 p-4 max-w-[50%] gap-5 mx-auto h-96 bg-red-400 rounded-md fixed inset-0 flex  mt-20">
+      {({ values, setFieldValue }) => (
+        <Form className="space-y-4 p-4 max-w-[50%] gap-5 mx-auto h-96 bg-red-400 rounded-md fixed inset-0 flex mt-20">
           <div className="w-1/2 h-40">
             <div>
               <label htmlFor="title" className="block font-medium">
@@ -130,7 +192,13 @@ const NewsForm = () => {
               />
             </div>
 
-            <div>
+            <TagsInput values={values} setFieldValue={setFieldValue} />
+
+
+          </div>
+
+          <div className="w-1/2 h-40">
+          <div>
               <label htmlFor="source" className="block font-medium">
                 Source
               </label>
@@ -146,9 +214,6 @@ const NewsForm = () => {
                 className="text-red-600 text-sm"
               />
             </div>
-          </div>
-
-          <div className="w-1/2 h-40">
             <div className="flex flex-col">
               <label htmlFor="date" className="block font-medium">
                 Date
@@ -185,7 +250,7 @@ const NewsForm = () => {
                 <img
                   src={previewImage || "/upload_area.svg"}
                   alt="Preview"
-                  className="w-full h-40 object-contain cursor-pointer"
+                  className="w-full h-20 object-contain cursor-pointer"
                 />
               </label>
               <ErrorMessage
@@ -195,14 +260,12 @@ const NewsForm = () => {
               />
             </div>
             <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-          >
-            Submit News
-          </button>
+              type="submit"
+              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            >
+              Submit News
+            </button>
           </div>
-
-
         </Form>
       )}
     </Formik>

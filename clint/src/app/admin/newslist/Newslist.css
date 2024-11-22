@@ -1,0 +1,31 @@
+.listproduct-format-main{
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  padding: 20px 0;
+  color: #454545;
+  font-size: 15px;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
+}
+
+.listproduct-format{
+  align-items: center;
+  font-weight: 500;
+  justify-content: center;
+}
+
+.remove-icon{
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.newslist-image{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
