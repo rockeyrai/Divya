@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
 
 const images = [
   "/main_banner.jpg",
@@ -10,6 +11,7 @@ const images = [
 
 const RaiHero = forwardRef((props, ref) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const router = useRouter()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,7 +43,7 @@ const RaiHero = forwardRef((props, ref) => {
           <p className="text-xl md:text-2xl text-white mb-8 px-40">
           Welcome to Divya, your go-to destination for high-quality photo printing, online form filling, and a wide range of printing services. We provide fast, reliable, and affordable solutions to help you preserve memories and simplify your tasks. Whether you need professional prints or assistance with forms, we’re here to make your life easier with excellent service and convenience.
           </p>
-          <button className="bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200 transition-colors">
+          <button onClick={() => router.push('/about-us')}  className="bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200 transition-colors">
             Learn More
           </button>
         </div>
