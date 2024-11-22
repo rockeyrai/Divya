@@ -29,9 +29,10 @@ const RaiHero = forwardRef((props, ref) => {
           alt={`Hero image ${index + 1}`}
           fill
           style={{ objectFit: 'cover' }}
-          priority={index === 0}
+          priority
           className={`transition-opacity duration-1000 ${
             index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+       
           }`}
         />
       ))}

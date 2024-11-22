@@ -8,9 +8,9 @@ const RaiNavbar = ({ scrollToSection }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const router = useRouter(); // Initialize useNavigate
+  const router = useRouter(); // Initialize router
+
   useEffect(() => {
-    
     const fetchUserData = async () => {
       try {
         // Retrieve the token and user from localStorage
@@ -43,20 +43,32 @@ const RaiNavbar = ({ scrollToSection }) => {
     fetchUserData();
   }, []);
 
+  const handleNavigation = (section) => {
+    if (typeof window !== "undefined" && window.location.pathname === "/about-us") {
+      // Redirect to home and scroll after load
+      router.push("/");
+    } else {
+      scrollToSection(section);
+    }
+  };
+  
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <nav className="navbar">
-      <h1 onClick={() => router.push('/')} className="cursor-pointer">Divya</h1>
+      <h1 onClick={() => router.push("/")} className="cursor-pointer">
+        Divya
+      </h1>
       <div className="flex items-center w-[50%] justify-between">
         <ul className="flex items-center gap-3 cursor-pointer">
-          <li onClick={() => scrollToSection("hero")}>Home</li>
-          <li onClick={() => scrollToSection("news")}>News</li>
-          <li onClick={() => scrollToSection("service")}>Service</li>
-          <li onClick={() => scrollToSection("footer")}>Contact</li>
+          <li onClick={() => handleNavigation("hero")}>Home</li>
+          <li onClick={() => handleNavigation("news")}>News</li>
+          <li onClick={() => handleNavigation("service")}>Service</li>
+          <li onClick={() => handleNavigation("footer")}>Contact</li>
         </ul>
-        <h2>Welcome, {userData.fullName}</h2>
+        <h2>Welcome, {userData?.fullName}</h2>
       </div>
     </nav>
   );
