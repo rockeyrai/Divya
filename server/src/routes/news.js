@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/newslist',getNews)
 router.post('/addnews',addNews)
-router.post('/upload', upload.single('product'), uploadController);
+router.post('/upload', upload.single('news'), uploadController);
 router.post('/removenews',removeNews)
 
 module.exports = router

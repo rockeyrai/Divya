@@ -105,7 +105,7 @@ const NewsForm = () => {
     let uploadedImageUrl;
 
     const formData = new FormData();
-    formData.append("product", values.image);
+    formData.append("news", values.image);
 
     try {
       const imageResponse = await fetch("http://localhost:8000/upload", {
