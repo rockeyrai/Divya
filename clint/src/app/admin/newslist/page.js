@@ -31,7 +31,7 @@ const NewsList = () => {
     try {
       console.log("Removing news with ID:", id); // Log the ID being sent
   
-      const response = await fetch("http://localhost:8000/removenews", {
+      const response = await fetch("http://localhost:8000/removenews", {  // Adjust the URL as needed
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -52,7 +52,6 @@ const NewsList = () => {
       console.error("Error removing news:", error);
     }
   };
-  
   
 
   return (

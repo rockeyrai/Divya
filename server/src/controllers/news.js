@@ -1,4 +1,7 @@
 const News = require('../models/newsModels'); // Assuming the News model is in the 'models/news.js' file
+const fs = require('fs');
+const path = require('path');
+const removeLocalImage = require('../middleware/removelocal');
 
 // Add a new news article
 const addNews = async (req, res) => {
@@ -51,32 +54,35 @@ const getNews = async (req, res) => {
 
 
 const removeNews = async (req, res) => {
+  const { id } = req.body;
+
   try {
-    console.log("Request Body:", req.body); // Log the request to verify the received ID
+    const newsItem = await News.findById(id);
 
-    const { id } = req.body;
-
-    if (!id) {
-      return res.status(400).json({ success: false, message: "ID is required" });
+    if (!newsItem) {
+      return res.status(404).json({ error: "News not found" });
     }
 
-    // Use `_id` for deletion
-    const result = await News.findByIdAndDelete(id);
+    const imageFilename = newsItem.image.split('/').pop();
 
-    if (!result) {
-      return res.status(404).json({ success: false, message: "News not found" });
-    }
+    removeLocalImage(imageFilename)
 
-    console.log("Removed document:", result);
-    res.json({
-      success: true,
-      message: "News removed successfully",
-    });
+    // Delete the news entry from the database
+    await News.findByIdAndDelete(id);
+
+    // Send the success response
+    return res.status(200).json({ message: "News item and image deleted successfully" });
   } catch (error) {
     console.error("Error removing news:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+
+    // Ensure only one response is sent
+    if (!res.headersSent) {
+      return res.status(500).json({ error: "Failed to remove news" });
+    }
   }
 };
+
+
 
 
 module.exports = { addNews, getNews,removeNews };
