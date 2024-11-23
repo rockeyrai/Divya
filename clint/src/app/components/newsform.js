@@ -155,7 +155,7 @@ const NewsForm = () => {
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue }) => (
-        <Form className="space-y-4 p-4 max-w-[50%] gap-5 mx-auto h-96 bg-red-400 rounded-md fixed inset-0 flex mt-20">
+        <Form className="space-y-4 p-4 max-w-[80%] md:max-w-[50%] gap-5 mx-auto h-96 bg-red-400 rounded-md fixed inset-0 flex mt-20">
           <div className="w-1/2 h-40">
             <div>
               <label htmlFor="title" className="block font-medium">

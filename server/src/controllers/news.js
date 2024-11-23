@@ -49,4 +49,34 @@ const getNews = async (req, res) => {
   }
 };
 
-module.exports = { addNews, getNews };
+
+const removeNews = async (req, res) => {
+  try {
+    console.log("Request Body:", req.body); // Log the request to verify the received ID
+
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID is required" });
+    }
+
+    // Use `_id` for deletion
+    const result = await News.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ success: false, message: "News not found" });
+    }
+
+    console.log("Removed document:", result);
+    res.json({
+      success: true,
+      message: "News removed successfully",
+    });
+  } catch (error) {
+    console.error("Error removing news:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
+module.exports = { addNews, getNews,removeNews };

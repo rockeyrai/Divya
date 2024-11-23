@@ -21,11 +21,39 @@ const NewsList = () => {
 
   useEffect(() => {
     fetchNews();
-  }, []);
+  }, [allNews]);
 
   const addPopUp = () => {
     setAdd((current) => !current);
   };
+
+  const removeNews = async (id) => {
+    try {
+      console.log("Removing news with ID:", id); // Log the ID being sent
+  
+      const response = await fetch("http://localhost:8000/removenews", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }), // Send the correct `_id`
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error("Backend Error Message:", errorMessage); // Log backend error
+        throw new Error("Failed to remove news");
+      }
+  
+      console.log("News removed successfully");
+      await fetchNews(); // Refresh the news list
+    } catch (error) {
+      console.error("Error removing news:", error);
+    }
+  };
+  
+  
 
   return (
     <div>
@@ -51,7 +79,7 @@ const NewsList = () => {
         <div className="newslist-allnews">
           <hr />
           {allNews.map((news) => (
-            <div key={news.id || news._id || news.title}>
+            <div key={news._id}>
               <div className=" listproduct-format-main listproduct-format ">
                 <img
                   src={news.image || "default_image.png"} // Fallback for missing image
@@ -67,14 +95,14 @@ const NewsList = () => {
                 </p>{" "}
                 {/* Fallback for missing date */}
                 <p>
-                  {news.description
-                    ? news.description.slice(0, 50)
+                  {news.content
+                    ? news.content.slice(0, 50)
                     : "No description"}
                   ...
                 </p>{" "}
                 {/* Fallback for missing description */}
                 <img
-                  onClick={() => removeNews(news.id)}
+                  onClick={() => removeNews(news._id)}
                   className="remove-icon"
                   src="/delete_.png"
                   alt="remove"
