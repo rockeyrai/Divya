@@ -68,7 +68,7 @@ export default function AdminLayoutComponent({
               <Button variant="ghost" size="sm" className="ml-4">
                 <img
                   className="w-8 h-8 rounded-full"
-                  src="/placeholder.svg?height=32&width=32"
+                  src="/400772957_216883978022531_3005775761945613774_n.jpg"
                   alt="User" />
                 <span className="flex-1 ml-3 text-left">
                   <div className="font-medium truncate">John Doe</div>

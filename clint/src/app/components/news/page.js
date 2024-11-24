@@ -2,53 +2,35 @@ import React, { forwardRef, useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import "./News.css";
 
-// Sample news data
-const newsItems = [
-  {
-    id: 1,
-    title: "New Technology Breakthrough",
-    description:
-      "Scientists have made a groundbreaking discovery in quantum computing, potentially revolutionizing the field of cryptography and data processing.",
-    image: "/c54bec1a-4c69-435e-8e30-37e897a88dcc.jpg",
-  },
-  {
-    id: 2,
-    title: "Global Climate Summit",
-    description:
-      "World leaders gather to discuss urgent climate action plans, setting ambitious targets for reducing carbon emissions over the next decade.",
-    image: "/400772957_216883978022531_3005775761945613774_n.jpg",
-  },
-  {
-    id: 3,
-    title: "Economic Recovery Trends",
-    description:
-      "Experts analyze positive signs in the global economy post-pandemic, with emerging markets showing particularly strong growth potential.",
-    image: "/398515986_872164520933406_7696851842795521949_n.jpg",
-  },
-  {
-    id: 4,
-    title: "Advancements in Healthcare",
-    description:
-      "Revolutionary treatment shows promise in fighting rare diseases, offering hope to millions of patients worldwide.",
-    image: "/398491162_877321490659930_3872872133272746253_n.jpg",
-  },
-  {
-    id: 5,
-    title: "Space Exploration Milestone",
-    description:
-      "NASA announces plans for the next phase of Mars exploration, including the possibility of establishing a permanent human presence on the red planet.",
-    image: "/IMG_5690.jpg",
-  },
-];
-
 const RaiNews = forwardRef((props, ref) => {
   const sliderRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
+  const [allNews, setAllNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/newslist"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch news");
+      const data = await res.json();
+      setAllNews(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
 
   const scroll = (direction) => {
     if (sliderRef.current) {
-      const { scrollLeft, clientWidth } = sliderRef.current;
+      const { clientWidth } = sliderRef.current;
       const scrollAmount = direction === "left" ? -clientWidth : clientWidth;
       sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
@@ -70,6 +52,9 @@ const RaiNews = forwardRef((props, ref) => {
     }
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <section
       ref={ref}
@@ -81,6 +66,7 @@ const RaiNews = forwardRef((props, ref) => {
         <div className="relative">
           {showLeftArrow && (
             <button
+              aria-label="Scroll Left"
               className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
               onClick={() => scroll("left")}
             >
@@ -102,16 +88,15 @@ const RaiNews = forwardRef((props, ref) => {
           )}
           <div
             ref={sliderRef}
-            className="flex overflow-x-auto gap-5 pb-4 snap-x snap-mandatory"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex overflow-x-auto gap-5 pb-4 snap-x snap-mandatory scroll-container"
           >
-            {newsItems.map((item) => (
+            {allNews.map((item) => (
               <div
-                key={item.id}
+                key={item.source}
                 className="flex-shrink-0 w-[300px] h-[400px] snap-center bg-white rounded-lg shadow-md overflow-hidden hover-box "
               >
                 <Image
-                  src={item.image}
+                  src={item.image || "/default-image.jpg"}
                   alt={item.title}
                   width={300}
                   height={300}
@@ -120,7 +105,7 @@ const RaiNews = forwardRef((props, ref) => {
                 <div className="p-4">
                   <h3 className="text-xm font-semibold mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-xs line-clamp-3">
-                    {item.description}
+                    {item.content}
                   </p>
                 </div>
                 <div className="px-4 pb-4">
@@ -133,6 +118,7 @@ const RaiNews = forwardRef((props, ref) => {
           </div>
           {showRightArrow && (
             <button
+              aria-label="Scroll Right"
               className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
               onClick={() => scroll("right")}
             >
