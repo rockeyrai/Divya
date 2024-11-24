@@ -2,3 +2,13 @@
   height: calc(100vh - 10vh); /* Reduce the height to fit below the navbar */
   padding-top: 10vh; /* Adds padding to create space for the fixed navbar */
 }
+
+.main-hero {
+  height: 100vh;  /* Ensure it takes up the full viewport height */
+  overflow-y: auto;  /* Allow vertical scrolling inside this container */
+  -webkit-overflow-scrolling: touch;  /* For smooth scrolling on iOS devices */
+}
+
+.main-hero::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

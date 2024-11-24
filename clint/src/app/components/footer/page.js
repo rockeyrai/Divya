@@ -10,11 +10,10 @@ import "./Footer.css";
 
 const RaiFooter = forwardRef((props, ref) => {
   return (
-    <section ref={ref} style={{ height: "50vh" }}>
-              <h2 className="text-3xl font-bold mb-20 text-center">Contact Us</h2>
+    <section ref={ref} style={{ height: "50vh" }} className="main-footer" >
+      <h2 className="text-3xl font-bold mb-10 text-center">Contact Us</h2>
       {/* Contact Section */}
       <section className="contact-section">
-        
         {/* Map */}
         <div className="map-container">
           <iframe

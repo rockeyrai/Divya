@@ -26,7 +26,7 @@ const RaiHome = () => {
   };
 
   return (
-    <div>
+    <div className='main-hero'>
       <RaiNavbar scrollToSection={scrollToSection} />
       <div ref={heroRef} className="section-height">
         <RaiHero />

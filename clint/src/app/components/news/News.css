@@ -24,3 +24,12 @@
   transform: translateY(-10px); /* Lift up on hover */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Deeper shadow */
 }
+
+.scroll-container {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

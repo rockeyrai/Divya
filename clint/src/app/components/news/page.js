@@ -4,7 +4,7 @@ import "./News.css";
 
 const RaiNews = forwardRef((props, ref) => {
   const sliderRef = useRef(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showLeftArrow, setShowLeftArrow] = useState(true);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [allNews, setAllNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +67,7 @@ const RaiNews = forwardRef((props, ref) => {
           {showLeftArrow && (
             <button
               aria-label="Scroll Left"
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
+              className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
               onClick={() => scroll("left")}
             >
               <svg

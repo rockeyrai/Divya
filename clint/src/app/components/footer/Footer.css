@@ -4,6 +4,10 @@ body {
   color: #333;
 }
 
+.main-footer{
+  background: #f7f7f7;
+}
+
 .contact-section {
   display: flex;
   flex-wrap: wrap;
@@ -13,6 +17,7 @@ body {
   flex: 1;
   min-width: 300px;
   height: full;
+  margin: 20px;
 }
 
 iframe {
@@ -33,6 +38,7 @@ iframe {
 
 .info-container {
   background: #f7f7f7;
+  margin:20px 0px;
 }
 
 .info-container h2 {
