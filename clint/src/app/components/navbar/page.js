@@ -72,35 +72,45 @@ const RaiNavbar = ({ scrollToSection }) => {
     }
   };
 
+  const goToLoginPage = () => {
+    router.push("/login");
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <nav className="navbar">
-      <h1 onClick={() => router.push("/")} className="cursor-pointer">
-        Divya
-      </h1>
-      <div className="flex items-center w-[30%] justify-between">
-        <ul className="flex items-center gap-3 cursor-pointer">
-          <li onClick={() => handleNavigation("hero")}>Home</li>
-          <li onClick={() => handleNavigation("news")}>News</li>
-          <li onClick={() => handleNavigation("service")}>Service</li>
-          <li onClick={() => handleNavigation("footer")}>Contact</li>
-        </ul>
-        <DropdownMenu className="z-30 absolute ">
-          <DropdownMenuTrigger asChild>
-            <Button>{login?'user':'login'}</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-40">
-            <DropdownMenuLabel> {userData?.fullName}</DropdownMenuLabel>
-            <DropdownMenuItem>
-              Log out
-              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </nav>
+<nav className="navbar">
+    <h1 onClick={() => router.push("/")} className="cursor-pointer">
+      Divya
+    </h1>
+    <div className="flex items-center w-[30%] justify-between">
+      <ul className="flex items-center gap-3 cursor-pointer">
+        <li onClick={() => handleNavigation("hero")}>Home</li>
+        <li onClick={() => handleNavigation("news")}>News</li>
+        <li onClick={() => handleNavigation("service")}>Service</li>
+        <li onClick={() => handleNavigation("footer")}>Contact</li>
+      </ul>
+      <DropdownMenu className="z-30 absolute">
+        <DropdownMenuTrigger asChild>
+          <Button onClick={!login ? goToLoginPage : null}>
+            {login ? "user" : "login"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-40">
+          {login && (
+            <>
+              <DropdownMenuLabel>{userData?.fullName}</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => setLogin(false)}>
+                Log out
+                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </nav>
   );
 };
 
