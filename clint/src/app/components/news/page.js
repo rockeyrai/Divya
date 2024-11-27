@@ -109,7 +109,8 @@ const RaiNews = forwardRef((props, ref) => {
                   </p>
                 </div>
                 <div className="px-4 pb-4">
-                  <button className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                  <button className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"  onClick={() => (window.location.href =`${item.source}` )} >
+                 
                     Read More
                   </button>
                 </div>
