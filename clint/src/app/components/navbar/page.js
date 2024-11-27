@@ -17,48 +17,47 @@ import { Button } from "@/components/ui/button";
 const RaiNavbar = ({ scrollToSection }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [login,setLogin] = useState(false);
+  const [login, setLogin] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
         const storedUser = JSON.parse(localStorage.getItem("user"));
-  
+
         if (!token || !storedUser || !storedUser.phoneNumber) {
-          throw new Error("No user logged in");
+          // No logged-in user; set userData to null and stop loading
+          setUserData(null);
+          setLoading(false);
+          return;
         }
-  
+
         const response = await axios.get(
-          `http://localhost:8000/userdata/${storedUser.phoneNumber}`,
+          `http://localhost:8000/user/${storedUser.phoneNumber}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-  
-        setUserData(response.data); // Update the user data state
+
+        setUserData(response.data || null); // Handle empty response gracefully
       } catch (err) {
         console.error("Error fetching user data:", err);
+        setUserData(null); // Ensure userData is null in case of an error
         setError(err.message || "Failed to fetch user data");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchUserData();
   }, []);
-  
+
   // Separate useEffect for handling login state
   useEffect(() => {
-    if (userData) {
-      setLogin(true); // Set login to true if userData exists
-    } else {
-      setLogin(false); // Set login to false otherwise
-    }
-  }, [userData]); // Triggered whenever userData changes
-  
+    setLogin(!!userData); // Set login state based on userData
+  }, [userData]);
 
   const handleNavigation = (section) => {
     if (
@@ -76,41 +75,56 @@ const RaiNavbar = ({ scrollToSection }) => {
     router.push("/login");
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleLogout = () => {
+    // Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Reset state
+    setUserData(null);
+    setLogin(false);
+
+    // Optional: Redirect to login page
+    router.push("/login");
+  };
 
   return (
-<nav className="navbar">
-    <h1 onClick={() => router.push("/")} className="cursor-pointer">
-      Divya
-    </h1>
-    <div className="flex items-center w-[30%] justify-between">
-      <ul className="flex items-center gap-3 cursor-pointer">
-        <li onClick={() => handleNavigation("hero")}>Home</li>
-        <li onClick={() => handleNavigation("news")}>News</li>
-        <li onClick={() => handleNavigation("service")}>Service</li>
-        <li onClick={() => handleNavigation("footer")}>Contact</li>
-      </ul>
-      <DropdownMenu className="z-30 absolute">
-        <DropdownMenuTrigger asChild>
-          <Button onClick={!login ? goToLoginPage : null}>
-            {login ? "user" : "login"}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40">
-          {login && (
-            <>
-              <DropdownMenuLabel>{userData?.fullName}</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setLogin(false)}>
-                Log out
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  </nav>
+    <nav className="navbar">
+      <h1 onClick={() => router.push("/")} className="cursor-pointer">
+        Divya
+      </h1>
+      <div className="flex items-center w-[30%] justify-between">
+        <ul className="flex items-center gap-3 cursor-pointer">
+          <li onClick={() => handleNavigation("hero")}>Home</li>
+          <li onClick={() => handleNavigation("news")}>News</li>
+          <li onClick={() => handleNavigation("service")}>Service</li>
+          <li onClick={() => handleNavigation("footer")}>Contact</li>
+        </ul>
+        {login ? (
+          <DropdownMenu className="z-40 absolute">
+            <DropdownMenuTrigger asChild>
+              <Button>User</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40">
+              {login && (
+                <>
+                  <DropdownMenuLabel>
+                    {userData ? userData.fullName : "User"}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button onClick={!login ? goToLoginPage : null}>login</Button>
+        )}
+      </div>
+    </nav>
   );
 };
 
