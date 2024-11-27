@@ -83,9 +83,6 @@ const RaiNavbar = ({ scrollToSection }) => {
     // Reset state
     setUserData(null);
     setLogin(false);
-
-    // Optional: Redirect to login page
-    router.push("/login");
   };
 
   return (
