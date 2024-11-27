@@ -1,8 +1,10 @@
 import React, { forwardRef } from "react";
 import { FaCamera, FaPrint, FaKeyboard } from "react-icons/fa";
 import "./Service.css";
+import { useRouter } from "next/navigation";
 
 const RaiService = forwardRef((props, ref) => {
+  const router = useRouter()
   const services = [
     {
       id: 1,
@@ -11,7 +13,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "High-quality photo printing services to preserve your precious memories.",
       buttonText: "Learn More",
-      link: "#photo-printing",
+      link: "photo-service",
       theme: "btn-back-orange ",
     },
     {
@@ -21,7 +23,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "Fast and reliable document printing for all your business or personal needs.",
       buttonText: "Start Printing",
-      link: "#print-services",
+      link: "print-service",
       theme: "btn-back-black ",
     },
     {
@@ -31,7 +33,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "Assistance with filling out online forms quickly and accurately.",
       buttonText: "Apply Now",
-      link: "#form-filling",
+      link: "form-service",
       theme: "btn-back-yellow",
     },
   ];
@@ -62,12 +64,12 @@ const RaiService = forwardRef((props, ref) => {
 
               <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
               <p className="text-gray-600 mb-6">{service.description}</p>
-              <a
-                href={service.link}
+              <button
+                onClick={()=>{router.push(`${service.link}`)} }
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
               >
                 {service.buttonText}
-              </a>
+              </button>
             </div>
           ))}
         </div>
