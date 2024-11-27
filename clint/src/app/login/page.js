@@ -84,6 +84,10 @@ const LoginForm = ({ setUser }) => {
               </button>
             </Form>
           </Formik>
+          <div className="flex">
+          <h2> Don't have an account?</h2>
+          <button onClick={()=>{ router.push('/register')}}>Singup</button>
+          </div>
           <ToastContainer />
         </div>
       </div>
