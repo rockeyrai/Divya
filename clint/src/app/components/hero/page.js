@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
+
+
 const images = [
   "/main_banner.jpg",
  "/IMG_5701.jpg",
@@ -11,7 +13,23 @@ const images = [
 
 const RaiHero = forwardRef((props, ref) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [homeChange, setHomeChange] = useState([]);
   const router = useRouter()
+
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  useEffect(()=>{
+    fetchChange()
+  },[])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,6 +58,7 @@ const RaiHero = forwardRef((props, ref) => {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Welcome to Our Website
           </h1>
+          <h2>{homeChange.bodyColor}</h2>
           <p className="text-xl md:text-2xl text-white mb-8 px-40">
           Welcome to Divya, your go-to destination for high-quality photo printing, online form filling, and a wide range of printing services. We provide fast, reliable, and affordable solutions to help you preserve memories and simplify your tasks. Whether you need professional prints or assistance with forms, we’re here to make your life easier with excellent service and convenience.
           </p>

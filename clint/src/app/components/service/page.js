@@ -1,9 +1,23 @@
-import React, { forwardRef } from "react";
-import { FaCamera, FaPrint, FaKeyboard } from "react-icons/fa";
+import React, { forwardRef, useEffect, useState } from "react";
 import "./Service.css";
 import { useRouter } from "next/navigation";
 
 const RaiService = forwardRef((props, ref) => {
+  const [homeChange, setHomeChange] = useState([]);
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  useEffect(()=>{
+    fetchChange()
+  },[])
+  console.log(homeChange.location)
   const router = useRouter()
   const services = [
     {

@@ -9,6 +9,18 @@ const RaiNews = forwardRef((props, ref) => {
   const [allNews, setAllNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [homeChange, setHomeChange] = useState([]);
+  
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const fetchNews = async () => {
     try {
@@ -26,7 +38,9 @@ const RaiNews = forwardRef((props, ref) => {
 
   useEffect(() => {
     fetchNews();
+    fetchChange()
   }, []);
+  console.log(homeChange.image)
 
   const scroll = (direction) => {
     if (sliderRef.current) {

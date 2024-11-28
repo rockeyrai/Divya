@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import {
   FaPhone,
   FaEnvelope,
@@ -8,7 +8,24 @@ import {
 } from "react-icons/fa";
 import "./Footer.css";
 
+
 const RaiFooter = forwardRef((props, ref) => {
+  const [homeChange, setHomeChange] = useState([]);
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+useEffect(()=>{
+  fetchChange()
+},[])
+console.log(homeChange)
   return (
     <section ref={ref} style={{ height: "50vh" }} className="main-footer" >
       <h2 className="text-3xl font-bold mb-10 text-center">Contact Us</h2>
@@ -70,6 +87,8 @@ const RaiFooter = forwardRef((props, ref) => {
       {/* Footer */}
       <footer className="footer">
         <p>Terms & Conditions</p>
+        <h2>{homeChange.cardColor}</h2>
+        <h2>{homeChange.bodyColor}</h2>
       </footer>
     </section>
   );

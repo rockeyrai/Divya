@@ -20,6 +20,18 @@ const RaiNavbar = ({ scrollToSection }) => {
   const [login, setLogin] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [homeChange, setHomeChange] = useState([]);
+  
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,6 +64,7 @@ const RaiNavbar = ({ scrollToSection }) => {
     };
 
     fetchUserData();
+    fetchChange();
   }, []);
 
   // Separate useEffect for handling login state
@@ -90,6 +103,7 @@ const RaiNavbar = ({ scrollToSection }) => {
       <h1 onClick={() => router.push("/")} className="cursor-pointer">
         Divya
       </h1>
+      <h1>{homeChange.navbarColor}</h1>
       <div className="flex items-center w-[30%] justify-between">
         <ul className="flex items-center gap-3 cursor-pointer">
           <li onClick={() => handleNavigation("hero")}>Home</li>
