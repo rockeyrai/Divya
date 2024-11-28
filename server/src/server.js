@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config()
 const UserRoute = require('./routes/user')
 const NewsRouter = require('./routes/news')
-
+const HomeRouter = require('./routes/home')
 dbConnect()
 
 app.use(bodyParser.json());
@@ -16,6 +16,7 @@ app.use(cors())
 app.use(UserRoute)
 app.use(NewsRouter)
 app.use('/images', express.static('upload/images'));
+app.use(HomeRouter)
 
 
 app.listen(port, () => {
