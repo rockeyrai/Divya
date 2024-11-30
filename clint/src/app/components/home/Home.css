@@ -12,3 +12,13 @@
 .main-hero::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensure padding and border don't affect width and height */
+}
+
+body {
+  overflow: hidden; /* Hide the scrollbar on the body */
+}

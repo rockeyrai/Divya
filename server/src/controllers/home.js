@@ -1,26 +1,41 @@
 const HomeStructure = require("../models/homeModels");
 
-const changeHome = async (req,res)=>{
-  try{
-    const {homeImage,navbarColor,bodyColor,cardColor,contact,contactEmail,location } = req.body;
-    // change home using the News model
+const changeHome = async (req, res) => {
+  try {
+    console.log("Request body:", req.body);
+    const { homeImage, navbarColor, bodyColor, cardColor, contact, contactEmail, location } = req.body;
+
+    if (!homeImage) {
+      return res.status(400).json({ message: "homeImage is required." });
+    }
+
+    // Create a new document in the database
     const home = new HomeStructure({
-      homeImage,navbarColor,bodyColor,cardColor,contact,contactEmail,location 
+      homeImage: Array.isArray(homeImage) ? homeImage : [homeImage], // Ensure it's stored as an array
+      navbarColor,
+      bodyColor,
+      cardColor,
+      contact,
+      contactEmail,
+      location,
     });
-    // Save the new hom change to the database
+
+    // Save to database
     await home.save();
+
     res.status(201).json({
-      message: 'Home Page Change Successfully!',
-      news: home,
+      message: "Home Page Change Successfully!",
+      home,
     });
   } catch (error) {
-    console.error("Can't Change the Home page:", error);
+    console.error("Error changing Home page:", error);
     res.status(500).json({
-      message: "Can't Change the Home page",
+      message: "Error changing Home page",
       error: error.message,
     });
   }
-}
+};
+
 
 const getHomeChange = async (req,res)=>{
   try {

@@ -21,7 +21,7 @@ const NewsList = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [allNews]);
+  }, []);
 
   const addPopUp = () => {
     setAdd((current) => !current);

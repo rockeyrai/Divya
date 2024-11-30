@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 
 
 const images = [
-  "/main_banner.jpg",
- "/IMG_5701.jpg",
- "/IMG_5690.jpg"
+"/image1.jpg",
+"/image2.jpg",
+"/image3.jpg",
+"/image4.jpg",
 ]
 
 const RaiHero = forwardRef((props, ref) => {

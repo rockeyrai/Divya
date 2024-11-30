@@ -108,7 +108,7 @@ const NewsForm = () => {
     formData.append("news", values.image);
 
     try {
-      const imageResponse = await fetch("http://localhost:8000/upload", {
+      const imageResponse = await fetch("http://localhost:8000/uploadnews", {
         method: "POST",
         headers: {
           Accept: "application/json",
