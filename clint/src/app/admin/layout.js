@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from "@/app/components/ui/button"
-import { Input } from "@/app/components/ui/input"
+import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent } from "@/app/components/ui/sheet";
 import { cn } from "@/lib/utils"
 import { Bell, ChevronDown, Home, LayoutDashboard, Menu, Newspaper, Settings, Users } from 'lucide-react'
