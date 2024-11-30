@@ -42,7 +42,6 @@ const homeValidationSchema = Yup.object().shape({
     .required("Location is required"),
 });
 
-
 const HomeForm = () => {
   const [previewImages, setPreviewImages] = useState([]);
 
@@ -62,9 +61,9 @@ const HomeForm = () => {
 
   const handleSubmit = async (values, { resetForm }) => {
     console.log("Formik values on submit:", values); // Debugging
-    
+
     const formData = new FormData();
-    
+
     // Append other fields from values
     formData.append("navbarColor", values.navbarColor);
     formData.append("bodyColor", values.bodyColor);
@@ -72,7 +71,7 @@ const HomeForm = () => {
     formData.append("contact", values.contact);
     formData.append("contactEmail", values.contactEmail);
     formData.append("location", values.location);
-    
+
     // Append image files if they exist
     if (values.homeImage && values.homeImage.length > 0) {
       values.homeImage.forEach((file) => {
@@ -82,7 +81,7 @@ const HomeForm = () => {
       console.error("No homeImage files selected");
       return; // Don't proceed if no image is selected
     }
-    
+
     try {
       // Upload the images first
       const imageResponse = await fetch("http://localhost:8000/uploadhome", {
@@ -95,15 +94,15 @@ const HomeForm = () => {
       const imageResult = await imageResponse.json();
 
       alert(JSON.stringify(imageResult, null, 2));
-      
+
       if (imageResponse.ok) {
-       // Parse the JSON response
+        // Parse the JSON response
         console.log("Image upload response:", imageResult); // Log the full response
-  
+
         if (imageResult.success) {
           const uploadedImageUrl = imageResult?.image_urls; // Safely access the image_url
           alert(uploadedImageUrl); // Should alert the correct image URL if it exists
-          
+
           // Proceed with the form submission if the image upload was successful
           const homeData = {
             navbarColor: values.navbarColor,
@@ -114,12 +113,15 @@ const HomeForm = () => {
             location: values.location,
             homeImage: uploadedImageUrl, // Use uploaded image URL here
           };
-          
+
           console.log(`Working with homeData:`, homeData); // Debugging
-          
+
           // Send the rest of the data including homeImage URL
-          const response = await axios.post("http://localhost:8000/homeui", homeData);
-          
+          const response = await axios.post(
+            "http://localhost:8000/homeui",
+            homeData
+          );
+
           if (response.status === 200 || response.status === 201) {
             alert("Form submitted successfully!");
             resetForm();
@@ -136,11 +138,12 @@ const HomeForm = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       alert(
-        `Error submitting form: ${error.response?.data?.message || error.message}`
+        `Error submitting form: ${
+          error.response?.data?.message || error.message
+        }`
       );
     }
   };
-
 
   return (
     <Formik
@@ -153,7 +156,7 @@ const HomeForm = () => {
           {/* Home images */}
           <div>
             <div>
-              <label htmlFor="file-input" className="cursor-pointer">
+              <label htmlFor="file-input" className="cursor-pointer flex flex-col">
                 image
                 <input
                   type="file"
@@ -162,20 +165,27 @@ const HomeForm = () => {
                   multiple
                   onChange={(event) => {
                     const files = Array.from(event.target.files);
-                    setFieldValue("homeImage", files); // Updates Formik values
+                    setFieldValue("homeImage", files);
                     handleImagePreview(files); // Updates preview images
                   }}
+                  style={{ display: "none" }} // Hide the default file input
                 />
+                <label htmlFor="homeImage" className="file-label">
+                  Choose File
+                </label>
                 {/* Display image previews */}
                 {previewImages.length > 0 ? (
-                  previewImages.map((image, index) => (
+                  <div className="image-grid">
+                  {previewImages.map((image, index) => (
                     <img
                       key={index}
                       src={image}
                       alt={`Preview ${index}`}
                       className="w-full h-20 object-contain cursor-pointer"
                     />
-                  ))
+                  ))}
+                </div>
+                
                 ) : (
                   <img
                     src="/upload_area.svg"

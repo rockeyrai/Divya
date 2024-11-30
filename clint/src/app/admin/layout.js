@@ -8,6 +8,7 @@ import { Input } from "@/app/components/ui/input"
 import { Sheet, SheetContent } from "@/app/components/ui/sheet";
 import { cn } from "@/lib/utils"
 import { Bell, ChevronDown, Home, LayoutDashboard, Menu, Newspaper, Settings, Users } from 'lucide-react'
+import './Admin.css'
 
 const sidebarItems = [
   { icon: Home, label: 'Home', href: '/admin' },
