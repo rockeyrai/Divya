@@ -43,7 +43,7 @@ console.log(homeChange)
         </div>
 
         {/* Info */}
-        <div className="info-container">
+        <div className="info-container" style={{ backgroundColor: homeChange.bodyColor }}>
           <h2>Meet us</h2>
           <div className="info-item">
             <FaPhone className="icon" /> +40720301333

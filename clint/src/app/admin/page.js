@@ -13,8 +13,7 @@ const homeValidationSchema = Yup.object().shape({
           value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type)
         );
       })
-    ).min(4, "You must upload at least 4 images")
-    .required("At least one image is required"),
+    ),
 
   navbarColor: Yup.string()
     .matches(/^#[0-9A-Fa-f]{6}$/, "Invalid color code")

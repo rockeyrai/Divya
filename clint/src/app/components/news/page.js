@@ -135,7 +135,7 @@ const RaiNews = forwardRef((props, ref) => {
           {showRightArrow && (
             <button
               aria-label="Scroll Right"
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-md"
               onClick={() => scroll("right")}
             >
               <svg
