@@ -4,7 +4,7 @@ const router = express.Router();
 const { uploadController } = require('../controllers/image');
 const upload = require('../middleware/imageHandler');
 
-router.post("/homeui",changeHome)
+router.patch("/homeui/:id",changeHome)
 router.get('/homeui',getHomeChange)
 router.post('/uploadhome',  upload.array('homeImage', 5), uploadController);
 

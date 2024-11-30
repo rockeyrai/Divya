@@ -1,38 +1,23 @@
 const HomeStructure = require("../models/homeModels");
 
-const changeHome = async (req, res) => {
+const changeHome =  async (req, res) => {
   try {
-    console.log("Request body:", req.body);
-    const { homeImage, navbarColor, bodyColor, cardColor, contact, contactEmail, location } = req.body;
+    const { id } = req.params;
+    const updatedData = req.body;
 
-    if (!homeImage) {
-      return res.status(400).json({ message: "homeImage is required." });
+    // Update the record in the database
+    const result = await HomeStructure.findByIdAndUpdate(id, updatedData, {
+      new: true, // Return the updated document
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "Record not found." });
     }
 
-    // Create a new document in the database
-    const home = new HomeStructure({
-      homeImage: Array.isArray(homeImage) ? homeImage : [homeImage], // Ensure it's stored as an array
-      navbarColor,
-      bodyColor,
-      cardColor,
-      contact,
-      contactEmail,
-      location,
-    });
-
-    // Save to database
-    await home.save();
-
-    res.status(201).json({
-      message: "Home Page Change Successfully!",
-      home,
-    });
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
-    console.error("Error changing Home page:", error);
-    res.status(500).json({
-      message: "Error changing Home page",
-      error: error.message,
-    });
+    console.error(error);
+    res.status(500).json({ message: "Failed to update record.", error });
   }
 };
 

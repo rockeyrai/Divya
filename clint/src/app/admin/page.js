@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -13,7 +13,7 @@ const homeValidationSchema = Yup.object().shape({
           value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type)
         );
       })
-    )
+    ).min(4, "You must upload at least 4 images")
     .required("At least one image is required"),
 
   navbarColor: Yup.string()
@@ -44,23 +44,66 @@ const homeValidationSchema = Yup.object().shape({
 
 const HomeForm = () => {
   const [previewImages, setPreviewImages] = useState([]);
-
-  const initialValues = {
+  const [homeChange, setHomeChange] = useState([]); // Initialize as null
+  let [initialValues, setInitialValues] = useState({
     homeImage: [],
     navbarColor: "#ffffff",
     bodyColor: "#ffffff",
     cardColor: "#ffffff",
-    contact: "",
+    contact: "98064676",
     contactEmail: "",
     location: "",
+  });
+  
+  const fetchChange = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
+      if (!res.ok) throw new Error("Failed to fetch Change");
+      const change = await res.json();
+      setHomeChange(change[0]); // Store the fetched object directly
+    } catch (error) {
+      console.error("Error fetching change:", error);
+    }
   };
+  
+  useEffect(() => {
+    fetchChange(); // Fetch data on component mount
+  }, []); // Empty dependency array to only run once
+  
+  useEffect(() => {
+    if (homeChange && homeChange.navbarColor) { // Check if homeChange is populated
+      console.log(homeChange.navbarColor); // Check the content of homeChange
+  
+      setInitialValues({
+        homeImage: [], // Empty array for new uploads
+        navbarColor: `${homeChange.navbarColor}` || "#ffffff",
+        bodyColor: `${homeChange.bodyColor}` || "#ffffff",
+        cardColor: `${homeChange.cardColor}` || "#ffffff",
+        contact: `${homeChange.contact}` || "",
+        contactEmail: `${homeChange.contactEmail}` || "",
+        location: `${homeChange.location}` || "",
+      });
+  
+      alert(`set homechange: ${homeChange}`); // Trigger alert after homeChange updates
+    }
+  }, [homeChange]); // Runs only when homeChange is updated
+   // Dependency on homeChange
+  
   const handleImagePreview = (files) => {
+
     const newPreviewImages = files.map((file) => URL.createObjectURL(file));
     setPreviewImages(newPreviewImages);
   };
 
   const handleSubmit = async (values, { resetForm }) => {
-    console.log("Formik values on submit:", values); // Debugging
+    const recordId = homeChange._id
+
+    if (!recordId) {
+      alert("No record ID found to update.");
+      return;
+    }
+
+    alert("Formik values on submit:", values); // Debugging
 
     const formData = new FormData();
 
@@ -117,8 +160,8 @@ const HomeForm = () => {
           console.log(`Working with homeData:`, homeData); // Debugging
 
           // Send the rest of the data including homeImage URL
-          const response = await axios.post(
-            "http://localhost:8000/homeui",
+          const response = await axios.patch(
+            `http://localhost:8000/homeui/${recordId}`,
             homeData
           );
 
@@ -148,13 +191,14 @@ const HomeForm = () => {
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize={true}
       validationSchema={homeValidationSchema}
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue }) => (
         <Form className="space-y-4 p-4 max-w-[80%] md:max-w-[50%] gap-5 mx-auto bg-gray-200 rounded-md fixed inset-0 flex mt-20">
           {/* Home images */}
-          <div>
+          <div className="w-1/2">
             <div>
               <label htmlFor="file-input" className="cursor-pointer flex flex-col">
                 image
@@ -181,14 +225,14 @@ const HomeForm = () => {
                       key={index}
                       src={image}
                       alt={`Preview ${index}`}
-                      className="w-full h-20 object-contain cursor-pointer"
+                      className=" h-10 w-10 object-contain cursor-pointer"
                     />
                   ))}
                 </div>
                 
                 ) : (
                   <img
-                    src="/upload_area.svg"
+                    src="/image_.png"
                     alt="Upload area"
                     className="w-full h-20 object-contain cursor-pointer"
                   />
@@ -211,7 +255,7 @@ const HomeForm = () => {
                 type="color"
                 id="navbarColor"
                 name="navbarColor"
-                className="w-full border p-2 rounded"
+                className="w-full h-10 border p-2 rounded"
               />
               <ErrorMessage
                 name="navbarColor"
@@ -229,7 +273,7 @@ const HomeForm = () => {
                 type="color"
                 id="bodyColor"
                 name="bodyColor"
-                className="w-full border p-2 rounded"
+                className="w-full h-10 border p-2 rounded"
               />
               <ErrorMessage
                 name="bodyColor"
@@ -247,7 +291,7 @@ const HomeForm = () => {
                 type="color"
                 id="cardColor"
                 name="cardColor"
-                className="w-full border p-2 rounded"
+                className="w-full h-10 border p-2 rounded"
               />
               <ErrorMessage
                 name="cardColor"
@@ -330,18 +374,4 @@ const HomeForm = () => {
 
 export default HomeForm;
 
-// const [homeChange, setHomeChange] = useState([]);
-// const fetchChange = async () => {
-//   try {
-//     const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
-//     if (!res.ok) throw new Error("Failed to fetch Change");
-//     const change = await res.json();
-//     setHomeChange(change);
-//   } catch (error) {
-//     setError(error.message);
-//   }
-// };
 
-// useEffect(() => {
-//   fetchChange(); // Pass a function, not an object
-// }, []);
