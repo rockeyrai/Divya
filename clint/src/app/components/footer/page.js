@@ -13,12 +13,12 @@ const RaiFooter = forwardRef((props, ref) => {
   const [homeChange, setHomeChange] = useState([]);
   const fetchChange = async () => {
     try {
-      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
       if (!res.ok) throw new Error("Failed to fetch Change");
       const change = await res.json();
-      setHomeChange(change);
+      setHomeChange(change[0]); // Store the fetched object directly
     } catch (error) {
-      setError(error.message);
+      console.error("Error fetching change:", error);
     }
   };
 
@@ -27,10 +27,10 @@ useEffect(()=>{
 },[])
 console.log(homeChange)
   return (
-    <section ref={ref} style={{ height: "50vh" }} className="main-footer" >
+    <section ref={ref} style={{ height: "50vh" ,backgroundColor: homeChange.bodyColor }}  className="main-footer" >
       <h2 className="text-3xl font-bold mb-10 text-center">Contact Us</h2>
       {/* Contact Section */}
-      <section className="contact-section">
+      <section className="contact-section "               style={{backgroundColor: homeChange.bodyColor }}>
         {/* Map */}
         <div className="map-container">
           <iframe
@@ -87,8 +87,6 @@ console.log(homeChange)
       {/* Footer */}
       <footer className="footer">
         <p>Terms & Conditions</p>
-        <h2>{homeChange.cardColor}</h2>
-        <h2>{homeChange.bodyColor}</h2>
       </footer>
     </section>
   );

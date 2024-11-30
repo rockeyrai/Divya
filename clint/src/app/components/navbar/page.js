@@ -24,12 +24,12 @@ const RaiNavbar = ({ scrollToSection }) => {
   
   const fetchChange = async () => {
     try {
-      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
       if (!res.ok) throw new Error("Failed to fetch Change");
       const change = await res.json();
-      setHomeChange(change);
+      setHomeChange(change[0]); // Store the fetched object directly
     } catch (error) {
-      setError(error.message);
+      console.error("Error fetching change:", error);
     }
   };
 
@@ -99,11 +99,10 @@ const RaiNavbar = ({ scrollToSection }) => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar"   style={{ backgroundColor: homeChange.navbarColor }} >
       <h1 onClick={() => router.push("/")} className="cursor-pointer">
         Divya
       </h1>
-      <h1>{homeChange.navbarColor}</h1>
       <div className="flex items-center w-[30%] justify-between">
         <ul className="flex items-center gap-3 cursor-pointer">
           <li onClick={() => handleNavigation("hero")}>Home</li>

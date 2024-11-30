@@ -13,12 +13,12 @@ const RaiNews = forwardRef((props, ref) => {
   
   const fetchChange = async () => {
     try {
-      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
       if (!res.ok) throw new Error("Failed to fetch Change");
       const change = await res.json();
-      setHomeChange(change);
+      setHomeChange(change[0]); // Store the fetched object directly
     } catch (error) {
-      setError(error.message);
+      console.error("Error fetching change:", error);
     }
   };
 
@@ -72,8 +72,8 @@ const RaiNews = forwardRef((props, ref) => {
   return (
     <section
       ref={ref}
-      style={{ height: "90vh" }}
-      className="py-12 px-4 bg-gray-100"
+      style={{ height: "90vh", backgroundColor: homeChange.bodyColor  }}
+      className="py-12 px-4"
     >
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold mb-8 text-center">Latest News</h2>
@@ -81,7 +81,7 @@ const RaiNews = forwardRef((props, ref) => {
           {showLeftArrow && (
             <button
               aria-label="Scroll Left"
-              className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md"
+              className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-md"
               onClick={() => scroll("left")}
             >
               <svg
@@ -106,8 +106,9 @@ const RaiNews = forwardRef((props, ref) => {
           >
             {allNews.map((item) => (
               <div
+              style={{backgroundColor: homeChange.cardColor }}
                 key={item.source}
-                className="flex-shrink-0 w-[300px] h-[400px] snap-center bg-white rounded-lg shadow-md overflow-hidden hover-box "
+                className="flex-shrink-0 w-[300px] h-[400px] snap-center  rounded-lg shadow-md overflow-hidden hover-box "
               >
                 <Image
                   src={item.image || "/default-image.jpg"}

@@ -6,12 +6,12 @@ const RaiService = forwardRef((props, ref) => {
   const [homeChange, setHomeChange] = useState([]);
   const fetchChange = async () => {
     try {
-      const res = await fetch("http://localhost:8000/homeui"); // Update endpoint accordingly
+      const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
       if (!res.ok) throw new Error("Failed to fetch Change");
       const change = await res.json();
-      setHomeChange(change);
+      setHomeChange(change[0]); // Store the fetched object directly
     } catch (error) {
-      setError(error.message);
+      console.error("Error fetching change:", error);
     }
   };
   useEffect(()=>{
@@ -54,8 +54,8 @@ const RaiService = forwardRef((props, ref) => {
   return (
     <section
       ref={ref}
-      style={{ height: "100vh" }}
-      className="py-12 px-10 bg-gray-50"
+      style={{ height: "100vh" ,backgroundColor: homeChange.bodyColor }}
+      className="py-12 px-10"
     >
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
@@ -63,7 +63,8 @@ const RaiService = forwardRef((props, ref) => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="p-6 h-80 bg-white rounded-2xl shadow-md text-center "
+              className="p-6 h-80 rounded-2xl shadow-md text-center "
+              style={{backgroundColor: homeChange.cardColor }}
             >
               <div className="block-container w-14 h-14 mb-5 ">
                 <div className={`btn-back rounded-xl ${service.theme}`} />
