@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 
 const RaiService = forwardRef((props, ref) => {
   const [homeChange, setHomeChange] = useState([]);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false); // Track user login status
+  const router = useRouter();
+
   const fetchChange = async () => {
     try {
       const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
@@ -14,11 +17,25 @@ const RaiService = forwardRef((props, ref) => {
       console.error("Error fetching change:", error);
     }
   };
-  useEffect(()=>{
-    fetchChange()
-  },[])
-  console.log(homeChange.location)
-  const router = useRouter()
+
+  // Simulate checking login status (replace with actual logic)
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem("token"); // Example: Check token in localStorage
+      setIsUserLoggedIn(!!token); // Set to true if token exists
+    };
+    fetchChange();
+    checkLoginStatus();
+  }, []);
+
+  const handleServiceClick = (link) => {
+    if (isUserLoggedIn) {
+      router.push(link); // Navigate to service link if logged in
+    } else {
+      router.push("/login"); // Redirect to login page if not logged in
+    }
+  };
+
   const services = [
     {
       id: 1,
@@ -51,10 +68,11 @@ const RaiService = forwardRef((props, ref) => {
       theme: "btn-back-yellow",
     },
   ];
+
   return (
     <section
       ref={ref}
-      style={{ height: "100vh" ,backgroundColor: homeChange.bodyColor }}
+      style={{ height: "100vh", backgroundColor: homeChange.bodyColor }}
       className="py-12 px-10"
     >
       <div className="container mx-auto">
@@ -63,8 +81,8 @@ const RaiService = forwardRef((props, ref) => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="p-6 h-80 rounded-2xl shadow-md text-center "
-              style={{backgroundColor: homeChange.cardColor }}
+              className="p-6 h-80 rounded-2xl shadow-md text-center"
+              style={{ backgroundColor: homeChange.cardColor }}
             >
               <div className="block-container w-14 h-14 mb-5 ">
                 <div className={`btn-back rounded-xl ${service.theme}`} />
@@ -72,7 +90,7 @@ const RaiService = forwardRef((props, ref) => {
                   <img
                     src={service.icon}
                     alt="threads"
-                    className="w-1/2 h-1/2 "
+                    className="w-1/2 h-1/2"
                   />
                 </div>
               </div>
@@ -80,7 +98,7 @@ const RaiService = forwardRef((props, ref) => {
               <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
               <p className="text-gray-600 mb-6">{service.description}</p>
               <button
-                onClick={()=>{router.push(`${service.link}`)} }
+                onClick={() => handleServiceClick(service.link)} // Use the conditional navigation function
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
               >
                 {service.buttonText}
