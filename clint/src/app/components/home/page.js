@@ -4,8 +4,9 @@ import RaiNavbar from '../navbar/page';
 import RaiHero from '../hero/page';
 import RaiFooter from '../footer/page';
 import RaiNews from '../news/page';
-import RaiService from '../service/page';
+
 import './Home.css'
+import RaiService from '../servicecompo/page';
 
 
 const RaiHome = () => {

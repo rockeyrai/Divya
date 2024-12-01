@@ -27,7 +27,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "High-quality photo printing services to preserve your precious memories.",
       buttonText: "Learn More",
-      link: "photo-service",
+      link: "user/service/photo",
       theme: "btn-back-orange ",
     },
     {
@@ -37,7 +37,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "Fast and reliable document printing for all your business or personal needs.",
       buttonText: "Start Printing",
-      link: "print-service",
+      link: "user/service/print",
       theme: "btn-back-black ",
     },
     {
@@ -47,7 +47,7 @@ const RaiService = forwardRef((props, ref) => {
       description:
         "Assistance with filling out online forms quickly and accurately.",
       buttonText: "Apply Now",
-      link: "form-service",
+      link: "user/service/form",
       theme: "btn-back-yellow",
     },
   ];
