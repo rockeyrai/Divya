@@ -3,17 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { AlignRight } from "lucide-react";
 
 // Validation schema using Yup
 const homeValidationSchema = Yup.object().shape({
-  homeImage: Yup.array()
-    .of(
-      Yup.mixed().test("fileType", "Only image files are allowed", (value) => {
-        return (
-          value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type)
-        );
-      })
-    ),
+  homeImage: Yup.array().of(
+    Yup.mixed().test("fileType", "Only image files are allowed", (value) => {
+      return (
+        value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type)
+      );
+    })
+  ),
 
   navbarColor: Yup.string()
     .matches(/^#[0-9A-Fa-f]{6}$/, "Invalid color code")
@@ -52,29 +52,34 @@ const HomeForm = () => {
     contact: "98064676",
     contactEmail: "",
     location: "",
+    previousImage: "",
   });
-  
+  const [loading, setLoading] = useState(true);
+
   const fetchChange = async () => {
     try {
       const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
       if (!res.ok) throw new Error("Failed to fetch Change");
       const change = await res.json();
       setHomeChange(change[0]); // Store the fetched object directly
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching change:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchChange(); // Fetch data on component mount
   }, []); // Empty dependency array to only run once
-  
+
   useEffect(() => {
-    if (homeChange && homeChange.navbarColor) { // Check if homeChange is populated
+    if (homeChange && homeChange.navbarColor) {
+      // Check if homeChange is populated
       console.log(homeChange.navbarColor); // Check the content of homeChange
-  
+
       setInitialValues({
-        homeImage: [], // Empty array for new uploads
+        homeImage: [homeChange.image], // Empty array for new uploads
+        previousImage: homeChange.image || "",
         navbarColor: `${homeChange.navbarColor}` || "#ffffff",
         bodyColor: `${homeChange.bodyColor}` || "#ffffff",
         cardColor: `${homeChange.cardColor}` || "#ffffff",
@@ -82,27 +87,23 @@ const HomeForm = () => {
         contactEmail: `${homeChange.contactEmail}` || "",
         location: `${homeChange.location}` || "",
       });
-  
-      alert(`set homechange: ${homeChange}`); // Trigger alert after homeChange updates
+      // Trigger alert after homeChange updates
     }
   }, [homeChange]); // Runs only when homeChange is updated
-   // Dependency on homeChange
-  
-  const handleImagePreview = (files) => {
+  // Dependency on homeChange
 
+  const handleImagePreview = (files) => {
     const newPreviewImages = files.map((file) => URL.createObjectURL(file));
     setPreviewImages(newPreviewImages);
   };
 
   const handleSubmit = async (values, { resetForm }) => {
-    const recordId = homeChange._id
+    const recordId = homeChange._id;
 
     if (!recordId) {
       alert("No record ID found to update.");
       return;
     }
-
-    alert("Formik values on submit:", values); // Debugging
 
     const formData = new FormData();
 
@@ -119,9 +120,11 @@ const HomeForm = () => {
       values.homeImage.forEach((file) => {
         formData.append("homeImage", file);
       });
+    } else if (values.previousImage) {
+      formData.append("previousImage", values.previousImage);
     } else {
-      console.error("No homeImage files selected");
-      return; // Don't proceed if no image is selected
+      alert("No image selected or available to submit.");
+      return; // Exit if no image is available
     }
 
     try {
@@ -135,17 +138,16 @@ const HomeForm = () => {
       });
       const imageResult = await imageResponse.json();
 
-      alert(JSON.stringify(imageResult, null, 2));
-
       if (imageResponse.ok) {
         // Parse the JSON response
         console.log("Image upload response:", imageResult); // Log the full response
 
         if (imageResult.success) {
           const uploadedImageUrl = imageResult?.image_urls; // Safely access the image_url
-          alert(uploadedImageUrl); // Should alert the correct image URL if it exists
+         // Should alert the correct image URL if it exists
 
           // Proceed with the form submission if the image upload was successful
+          alert(`Working with homeData:`,  values.navbarColor);
           const homeData = {
             navbarColor: values.navbarColor,
             bodyColor: values.bodyColor,
@@ -156,7 +158,7 @@ const HomeForm = () => {
             homeImage: uploadedImageUrl, // Use uploaded image URL here
           };
 
-          console.log(`Working with homeData:`, homeData); // Debugging
+          // alert(`Working with homeData: ${JSON.stringify(homeData)}`)
 
           // Send the rest of the data including homeImage URL
           const response = await axios.patch(
@@ -187,6 +189,33 @@ const HomeForm = () => {
     }
   };
 
+  const removeHomeImage = async (imageUrl) => {
+    try {
+      const fileName = imageUrl.split("/").pop();
+      alert(`Attempting to delete: ${fileName}`);
+  
+      const response = await fetch(`http://localhost:8000/homeui/${fileName}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error("Backend Error Message:", errorMessage);
+        throw new Error(errorMessage || "Failed to remove home image");
+      }
+  
+      console.log("Home image removed successfully");
+      await fetchChange(); // Refresh the news list or UI
+    } catch (error) {
+      console.error("Error removing home image:", error.message || error);
+    }
+  };
+  
+  
+
   return (
     <Formik
       initialValues={initialValues}
@@ -199,17 +228,22 @@ const HomeForm = () => {
           {/* Home images */}
           <div className="w-1/2">
             <div>
-              <label htmlFor="file-input" className="cursor-pointer flex flex-col">
+              <label
+                htmlFor="file-input"
+                className="cursor-pointer flex flex-col"
+              >
                 image
                 <input
                   type="file"
                   id="homeImage"
                   name="homeImage"
                   multiple
-                  onChange={(event) => {
-                    const files = Array.from(event.target.files);
-                    setFieldValue("homeImage", files);
-                    handleImagePreview(files); // Updates preview images
+                  onChange={async (event) => {
+                    // Wait for removeHomeImage to complete
+                    await removeHomeImage(homeChange.homeImage[0]);
+                    const files = Array.from(event.target.files); // Get selected files
+                    setFieldValue("homeImage", files); // Set formik value for homeImage
+                    handleImagePreview(files); // Update preview images
                   }}
                   style={{ display: "none" }} // Hide the default file input
                 />
@@ -219,16 +253,21 @@ const HomeForm = () => {
                 {/* Display image previews */}
                 {previewImages.length > 0 ? (
                   <div className="image-grid">
-                  {previewImages.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Preview ${index}`}
-                      className=" h-10 w-10 object-contain cursor-pointer"
-                    />
-                  ))}
-                </div>
-                
+                    {previewImages.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Preview ${index}`}
+                        className="h-10 w-10 object-contain cursor-pointer"
+                      />
+                    ))}
+                  </div>
+                ) : initialValues.previousImage ? (
+                  <img
+                    src={initialValues.previousImage}
+                    alt="Previous uploaded"
+                    className="w-full h-20 object-contain cursor-pointer"
+                  />
                 ) : (
                   <img
                     src="/image_.png"
@@ -372,5 +411,3 @@ const HomeForm = () => {
 };
 
 export default HomeForm;
-
-

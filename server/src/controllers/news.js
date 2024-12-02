@@ -1,7 +1,7 @@
 const News = require('../models/newsModels'); // Assuming the News model is in the 'models/news.js' file
 const fs = require('fs');
 const path = require('path');
-const removeLocalImage = require('../middleware/removelocal');
+const deleteNewsImage = require('../middleware/newsimage');
 
 // Add a new news article
 const addNews = async (req, res) => {
@@ -65,8 +65,7 @@ const removeNews = async (req, res) => {
 
     const imageFilename = newsItem.image.split('/').pop();
 
-    removeLocalImage(imageFilename)
-
+    deleteNewsImage(imageFilename)
     // Delete the news entry from the database
     await News.findByIdAndDelete(id);
 

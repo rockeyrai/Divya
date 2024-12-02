@@ -51,10 +51,10 @@ export default function AdminLayoutComponent({
                 <Menu className="w-6 h-6" />
                 <span className="sr-only">Open sidebar</span>
               </Button>
-              <Link href="/user" className="flex ml-2 md:mr-24">
+              <Link href="/" className="flex ml-2 md:mr-24">
                 <span
                   className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                    User Pannel
+                    Divya
                   </span>
               </Link>
             </div>
