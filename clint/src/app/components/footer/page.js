@@ -8,7 +8,6 @@ import {
 } from "react-icons/fa";
 import "./Footer.css";
 
-
 const RaiFooter = forwardRef((props, ref) => {
   const [homeChange, setHomeChange] = useState([]);
   const fetchChange = async () => {
@@ -22,15 +21,22 @@ const RaiFooter = forwardRef((props, ref) => {
     }
   };
 
-useEffect(()=>{
-  fetchChange()
-},[])
-console.log(homeChange)
+  useEffect(() => {
+    fetchChange();
+  }, []);
+  console.log(homeChange);
   return (
-    <section ref={ref} style={{ height: "50vh" ,backgroundColor: homeChange.bodyColor }}  className="main-footer" >
+    <section
+      ref={ref}
+      style={{ height: "50vh", backgroundColor: homeChange.bodyColor }}
+      className="main-footer"
+    >
       <h2 className="text-3xl font-bold mb-10 text-center">Contact Us</h2>
       {/* Contact Section */}
-      <section className="contact-section "               style={{backgroundColor: homeChange.bodyColor }}>
+      <section
+        className="contact-section "
+        style={{ backgroundColor: homeChange.bodyColor }}
+      >
         {/* Map */}
         <div className="map-container">
           <iframe
@@ -43,17 +49,19 @@ console.log(homeChange)
         </div>
 
         {/* Info */}
-        <div className="info-container" style={{ backgroundColor: homeChange.bodyColor }}>
+        <div
+          className="info-container"
+          style={{ backgroundColor: homeChange.bodyColor }}
+        >
           <h2>Meet us</h2>
           <div className="info-item">
-            <FaPhone className="icon" /> +40720301333
+            <FaPhone className="icon" /> {homeChange.contact}
           </div>
           <div className="info-item">
-            <FaEnvelope className="icon" /> divya@brandaffix.ro
+            <FaEnvelope className="icon" /> {homeChange.contactEmail}
           </div>
           <div className="info-item">
-            <FaMapMarkerAlt className="icon" /> Amman St. no 35, 4th floor, ap
-            10, Bucharest
+            <FaMapMarkerAlt className="icon" /> {homeChange.location}
           </div>
           <div className="social-icons">
             <a
