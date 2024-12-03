@@ -192,7 +192,6 @@ const HomeForm = () => {
   const removeHomeImage = async (imageUrl) => {
     try {
       const fileName = imageUrl.split("/").pop();
-      alert(`Attempting to delete: ${fileName}`);
   
       const response = await fetch(`http://localhost:8000/homeui/${fileName}`, {
         method: "DELETE",

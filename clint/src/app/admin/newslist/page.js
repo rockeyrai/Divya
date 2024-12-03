@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Joystick } from "lucide-react";
 
 const newsValidationSchema = Yup.object({
   title: Yup.string()
@@ -128,7 +129,11 @@ const NewsList = () => {
   const handleSubmit = async (values, { resetForm }) => {
     let uploadedImageUrl;
     const formData = new FormData();
+    console.log("Image being sent:", values.image);
     formData.append("news", values.image);
+
+
+
 
     try {
       const imageResponse = await fetch("http://localhost:8000/uploadnews", {
@@ -140,8 +145,10 @@ const NewsList = () => {
       });
 
       const imageResult = await imageResponse.json();
+
+
       if (imageResult.success) {
-        uploadedImageUrl = imageResult.image_url;
+        uploadedImageUrl = imageResult.image_urls;
       } else {
         alert("Image upload failed.");
         return;
@@ -149,8 +156,9 @@ const NewsList = () => {
 
       const newsData = {
         ...values,
-        image: uploadedImageUrl,
+        image: uploadedImageUrl[0],
       };
+
 
       const newsResponse = await axios.post(
         "http://localhost:8000/addnews",
@@ -303,6 +311,7 @@ const NewsList = () => {
                         className="hidden"
                         onChange={(event) => {
                           const file = event.target.files[0];
+                          console.log("Selected File:", file); // Debug
                           setFieldValue("image", file);
                           handleImagePreview(file);
                         }}
