@@ -15,7 +15,8 @@ app.use(express.json())
 app.use(cors())
 app.use(UserRoute)
 app.use(NewsRouter)
-app.use('/images', express.static('upload'));
+app.use('/images', express.static('upload/home'));
+app.use('/uploads/news', express.static('upload/news'));
 app.use(HomeRouter)
 
 
