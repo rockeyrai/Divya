@@ -29,6 +29,30 @@ const AdminUser = () => {
     fetchData();
   }, []);
 
+  const removeUser = async (id) => {
+    alert('remove is workin')
+    try {
+      const response = await fetch(`http://localhost:8000/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error("Backend Error Message:", errorMessage);
+        throw new Error("Failed to remove news");
+      }
+
+      await fetchData();
+    } catch (error) {
+      console.error("Error removing news:", error);
+    }
+  };
+
   return (
         <Table>
         <TableCaption>A list of news articles</TableCaption>
