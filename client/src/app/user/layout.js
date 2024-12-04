@@ -23,6 +23,9 @@ export default function AdminLayoutComponent({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const token = localStorage.getItem("token");
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
 
   return (
     (<div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -74,7 +77,7 @@ export default function AdminLayoutComponent({
                   src="/image1.jpg"
                   alt="User" />
                 <span className="flex-1 ml-3 text-left">
-                  <div className="font-medium truncate">John Doe</div>
+                  <div className="font-medium truncate">{storedUser.fullName }</div>
                 </span>
                 <ChevronDown className="ml-1 h-4 w-4 opacity-50" />
               </Button>
