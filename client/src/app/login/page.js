@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = ({ setUser }) => {
   const router = useRouter();
@@ -86,7 +87,7 @@ const LoginForm = ({ setUser }) => {
           </Formik>
           <div className="flex">
           <h2> Don't have an account?</h2>
-          <button onClick={()=>{ router.push('/register')}}>Singup</button>
+          <button onClick={()=>{ router.push('/register')}}>Sign up</button>
           </div>
           <ToastContainer />
         </div>
