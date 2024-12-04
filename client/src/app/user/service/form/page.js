@@ -3,7 +3,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const MyForm = () => {
+const FormService = () => {
   // Validation schema
   const validationSchema = Yup.object({
     photo: Yup.mixed()
@@ -87,4 +87,4 @@ const MyForm = () => {
   );
 };
 
-export default MyForm;
+export default FormService;
