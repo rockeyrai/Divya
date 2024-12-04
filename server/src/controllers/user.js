@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModels");
+require('dotenv').config();
+const nodemailer = require('nodemailer');
 
 const userRegister = async (req, res) => {
   //   1. email exists or not?
@@ -106,6 +108,34 @@ const removeUser = async (req, res) => {
   }
 };
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
+// Route to handle feedback form submission
+const emailReceive = async (req, res) => {
+  const { email, message } = req.body;
 
-module.exports = { userRegister, userData, userLogin, senduserdata,removeUser };
+  const mailOptions = {
+    from: email, // User's email
+    to: process.env.EMAIL_USER, // Your email
+    subject: 'New Feedback Message',
+    text: `Message from ${email}:\n\n${message}`,
+    html: `<p>Message from <strong>${email}</strong>:</p><p>${message}</p>`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Message sent: %s', info.messageId);
+    res.status(200).json({ message: 'Feedback sent successfully!' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Failed to send feedback.' });
+  }
+};
+
+module.exports = { userRegister, userData, userLogin, senduserdata,removeUser,emailReceive };

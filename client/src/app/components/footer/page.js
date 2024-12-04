@@ -10,6 +10,34 @@ import "./Footer.css";
 
 const RaiFooter = forwardRef((props, ref) => {
   const [homeChange, setHomeChange] = useState([]);
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = { email, message };
+
+    try {
+      const response = await fetch('http://localhost:8000/send-feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Feedback sent successfully!');
+      } else {
+        alert('Failed to send feedback.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('There was an error. Please try again later.');
+    }
+  };
+
   const fetchChange = async () => {
     try {
       const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
@@ -83,13 +111,22 @@ const RaiFooter = forwardRef((props, ref) => {
 
         {/* Form */}
         <div className="form-container">
-          <h2>Feedback</h2>
-          <form>
-            <textarea placeholder="Hello, my name is ..." />
-            <input type="text" placeholder="Your email address" />
-            <button type="submit">Send</button>
-          </form>
-        </div>
+      <h2>Feedback</h2>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          placeholder="Hello, my name is ..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Your email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
       </section>
 
       {/* Footer */}
