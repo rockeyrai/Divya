@@ -1,11 +1,16 @@
-"use client"; 
-import React from "react"; 
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+"use client";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
 import { motion } from "framer-motion";
 import { Calendar, Mail, MapPin, Phone, Users } from "lucide-react";
 import RaiNavbar from "@/app/components/navbar/page";
 
-const AboutUs = ()=> {
+const AboutUs = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -14,8 +19,8 @@ const AboutUs = ()=> {
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-<RaiNavbar scrollToSection={scrollToSection} />
-      <div className="container mx-auto px-10 md:px-40 py-16">
+      <RaiNavbar scrollToSection={scrollToSection} />
+      <div className="container mx-auto px-10 md:px-40 py-16 overflow-auto">
         <motion.h1
           className="text-5xl font-bold mt-10 text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
           initial={{ opacity: 0, y: -50 }}
@@ -29,7 +34,7 @@ const AboutUs = ()=> {
           className="flex flex-col gap-8 md:grid-cols-2 lg:grid-cols-3"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0, duration:2, staggerChildren: 1 }}
+          transition={{ delay: 0, duration: 2, staggerChildren: 1 }}
         >
           <Card className="col-span-full lg:col-span-2 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
@@ -93,20 +98,18 @@ const AboutUs = ()=> {
                 <CardTitle className="text-2xl">Our Motto</CardTitle>
               </CardHeader>
               <CardContent className="p-6 flex flex-col  items-center">
-
-              <div className="flex items-center justify-center">
-  <div className="w-20 h-40 bg-yellow-100 dark:bg-yellow-900 rounded-l-full overflow-hidden flex items-center justify-center">
-    <p className="text-xs font-bold text-yellow-600 dark:text-yellow-300 text-center px-2">
-      Empowering Moments
-    </p>
-  </div>
-  <div className="w-20 h-40 bg-orange-100 dark:bg-orange-900 rounded-r-full overflow-hidden flex items-center justify-center">
-    <p className="text-xs font-bold text-orange-600 dark:text-orange-300 text-center px-2">
-      Enhancing Lives
-    </p>
-  </div>
-</div>
-
+                <div className="flex items-center justify-center">
+                  <div className="w-20 h-40 bg-yellow-100 dark:bg-yellow-900 rounded-l-full overflow-hidden flex items-center justify-center">
+                    <p className="text-xs font-bold text-yellow-600 dark:text-yellow-300 text-center px-2">
+                      Empowering Moments
+                    </p>
+                  </div>
+                  <div className="w-20 h-40 bg-orange-100 dark:bg-orange-900 rounded-r-full overflow-hidden flex items-center justify-center">
+                    <p className="text-xs font-bold text-orange-600 dark:text-orange-300 text-center px-2">
+                      Enhancing Lives
+                    </p>
+                  </div>
+                </div>
 
                 <p className="mt-4 text-center">
                   This motto reflects our focus on providing quality services
@@ -244,6 +247,6 @@ const AboutUs = ()=> {
       </div>
     </div>
   );
-}
+};
 
-export default AboutUs
+export default AboutUs;
