@@ -61,6 +61,8 @@ const AdminUser = () => {
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Phone</TableHead>
+            <TableHead>Action</TableHead>
+
           </TableRow>
         </TableHeader>
         <TableBody>
