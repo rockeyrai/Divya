@@ -119,7 +119,7 @@ const RaiNews = forwardRef((props, ref) => {
                 />
                 <div className="p-4">
                   <h3 className="text-xm font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-xs line-clamp-3">
+                  <p className="text-gray-600 text-xs line-clamp-2">
                     {item.content}
                   </p>
                 </div>
