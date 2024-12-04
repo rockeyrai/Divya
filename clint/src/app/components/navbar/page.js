@@ -17,11 +17,11 @@ import { Button } from "@/components/ui/button";
 const RaiNavbar = ({ scrollToSection }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [login, setLogin] = useState(false);
   const [error, setError] = useState("");
-  const [homeChange, setHomeChange] = useState({ navbarColor: "#ffffff" }); // Default color
   const router = useRouter();
-
-  // Fetch home data from backend
+  const [homeChange, setHomeChange] = useState([]);
+  
   const fetchChange = async () => {
     try {
       const res = await fetch("http://localhost:8000/homeui"); // Adjust endpoint as needed
@@ -33,90 +33,70 @@ const RaiNavbar = ({ scrollToSection }) => {
     }
   };
 
-  // Refresh JWT token
-  const refreshToken = async () => {
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
-        token: localStorage.getItem("refreshToken"),
-      });
-      const { token } = res.data;
-      localStorage.setItem("token", token);
-      return token;
-    } catch (err) {
-      console.error("Failed to refresh token:", err);
-      handleLogout(); // Logout if refresh fails
-    }
-  };
-
-  // Fetch user data
-  const fetchUserData = async () => {
-    try {
-      console.log("Fetching user data...");
-      const token = localStorage.getItem("token");
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-
-      if (!token || !storedUser?.phoneNumber) {
-        console.log("No user logged in.");
-        setUserData(null);
-        setLoading(false);
-        return;
-      }
-
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/${storedUser.phoneNumber}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      console.log("Fetched User Data:", response.data);
-      setUserData(response.data || null);
-    } catch (err) {
-      if (err.response?.status === 401) {
-        const newToken = await refreshToken();
-        if (newToken) {
-          fetchUserData(); // Retry with refreshed token
-        }
-      } else {
-        console.error("Error fetching user data:", err);
-        setError(err.message || "Failed to fetch user data");
-        setUserData(null);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Logout functionality
-  const handleLogout = () => {
-    console.log("Logging out...");
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    setUserData(null);
-  };
-
-  // Fetch data on component mount
   useEffect(() => {
-    console.log("Component mounted, fetching data...");
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (!token || !storedUser || !storedUser.phoneNumber) {
+          // No logged-in user; set userData to null and stop loading
+          setUserData(null);
+          setLoading(false);
+          return;
+        }
+        const response = await axios.get(
+          `http://localhost:8000/user/${storedUser.phoneNumber}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUserData(response.data || null); // Handle empty response gracefully
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setUserData(null); // Ensure userData is null in case of an error
+        setError(err.message || "Failed to fetch user data");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchUserData();
-    fetchChange();
+  }, []);
+  // Separate useEffect for handling login state
+  useEffect(() => {
+    setLogin(!!userData); // Set login state based on userData
+  }, [userData]);
+  useEffect(() => {
+    fetchChange()
   }, []);
 
-  // Debugging state updates
-  useEffect(() => {
-    console.log("Updated homeChange:", homeChange);
-  }, [homeChange]);
-
-  // Navigation handling
   const handleNavigation = (section) => {
-    if (window.location.pathname === "/about-us") {
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname === "/about-us"
+    ) {
+      // Redirect to home and scroll after load
       router.push("/");
     } else {
       scrollToSection(section);
     }
   };
 
+  const goToLoginPage = () => {
+    router.push("/login");
+  };
+  const handleLogout = () => {
+    // Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    // Reset state
+    setUserData(null);
+    setLogin(false);
+    // Optional: Redirect to login page
+    router.push("/login");
+  };
+
   return (
-    <nav className="navbar" style={{ backgroundColor: homeChange.navbarColor }}>
+    <nav className="navbar" style={{ backgroundColor: homeChange.navbarColor  }}>
       <h1 onClick={() => router.push("/")} className="cursor-pointer">
         Divya
       </h1>
@@ -127,26 +107,32 @@ const RaiNavbar = ({ scrollToSection }) => {
           <li onClick={() => handleNavigation("service")}>Service</li>
           <li onClick={() => handleNavigation("footer")}>Contact</li>
         </ul>
-        {userData ? (
-          <DropdownMenu>
+        {login ? (
+          <DropdownMenu className="z-40 absolute">
             <DropdownMenuTrigger asChild>
               <Button>User</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>{userData.fullName || "User"}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                Log out
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-              </DropdownMenuItem>
+            <DropdownMenuContent className="w-40">
+              {login && (
+                <>
+                  <DropdownMenuLabel>
+                    {userData ? userData.fullName : "User"}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button onClick={() => router.push("/login")}>Login</Button>
+          <Button onClick={!login ? goToLoginPage : null}>login</Button>
         )}
       </div>
     </nav>
   );
 };
 
-export default RaiNavbar;
+export default RaiNavbar
