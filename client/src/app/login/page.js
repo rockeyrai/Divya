@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = ({ setUser }) => {
   const router = useRouter();
@@ -26,21 +26,23 @@ const LoginForm = ({ setUser }) => {
 
   const onSubmit = async (values) => {
     try {
-      const { data } = await axios.post('http://localhost:8000/login', values);
-  
+      const { data } = await axios.post("http://localhost:8000/login", values);
+
       // Check if login was successful
       if (data.token && data.user) {
         // Save user data and token in localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-  
+
         // Navigate to the home page
         router.push(`/`);
         toast.success("Login successful!");
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error(error?.response?.data?.msg || "Login failed. Please try again.");
+      toast.error(
+        error?.response?.data?.msg || "Login failed. Please try again."
+      );
     }
   };
 
@@ -49,10 +51,17 @@ const LoginForm = ({ setUser }) => {
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
             <Form>
               <div className="mb-4">
-                <label htmlFor="phoneNumber" className="block text-gray-700 font-semibold">
+                <label
+                  htmlFor="phoneNumber"
+                  className="block text-gray-700 font-semibold"
+                >
                   Phone Number
                 </label>
                 <Field
@@ -61,11 +70,18 @@ const LoginForm = ({ setUser }) => {
                   name="phoneNumber"
                   className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage
+                  name="phoneNumber"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
 
               <div className="mb-6">
-                <label htmlFor="password" className="block text-gray-700 font-semibold">
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 font-semibold"
+                >
                   Password
                 </label>
                 <Field
@@ -74,7 +90,11 @@ const LoginForm = ({ setUser }) => {
                   name="password"
                   className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
 
               <button
@@ -85,9 +105,15 @@ const LoginForm = ({ setUser }) => {
               </button>
             </Form>
           </Formik>
-          <div className="flex">
-          <h2> Don't have an account?</h2>
-          <button onClick={()=>{ router.push('/register')}}>Sign up</button>
+          <div className="flex justify-center mt-2">
+            <h2> Don't have an account?</h2>
+            <button
+              onClick={() => {
+                router.push("/register");
+              }}
+            >
+              Sign up
+            </button>
           </div>
           <ToastContainer />
         </div>

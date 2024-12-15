@@ -117,7 +117,7 @@ const RegisterForm = () => {
             </button>
           </Form>
         </Formik>
-        <div className="flex gap-3">
+        <div className="flex justify-center gap-2 mt-2">
           <h1>Singin to your account</h1>
           <button type="button" onClick={() => router.push("/login")}>
             login
